@@ -1,0 +1,46 @@
+#!/bin/sh                                                                                                                                                                                                            
+
+### BEGIN INIT INFO                                                                                                                                                                                                  
+# Provides:     YanBo                                                                                                                                                                                           
+### END INIT INFO                                                                                                                                                                                                    
+
+#. /lib/lsb/init-functions
+
+service_name='surveillance  - periodically check the status of tasks of the use-audeince service'
+short_name='task_surveillance_service'
+dir="/data/dist/task_surv_dir"
+java_file='task_stats-0.0.1-SNAPSHOT.jar'
+
+#if [ ! -n "$2" ] ;then
+#echo $2
+#else
+#echo $2
+#fi
+case "$1" in
+  start)
+     echo "Starting  $service_name"
+     export LANG=en_US.UTF-8
+     cd $dir
+     nohup java -jar $java_file --cron -to zhangbin9@le.com,shangmin@le.com,lijinlin@le.com -cc yanbo@le.com,wuzhiting@le.com,shixiaofei@le.com &
+     sleep 1s
+     echo 0
+     ;;
+  stop)
+     PID=`ps -ef | grep java | grep $java_file | awk '{ print $2 exportexport}'`
+     echo "Stopping $service_name"
+     if [ ! -z "$PID" ]; then
+     kill -15 $PID
+     fi
+     echo 0
+     ;;
+  restart)
+     sh $0 stop
+     sh $0 start
+     ;;
+  *)
+     echo "Usage: service $short_name {start|stop|restart}"
+     exit 1
+esac
+
+exit 0
+
